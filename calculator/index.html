@@ -2,11 +2,31 @@
 <html>
 <head>
 	<meta charset="utf-8">
+	<!-- 强制让文档与设备的宽度保持1：1 -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+	<!-- 删除默认的苹果工具栏和菜单栏 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- 禁止了把数字转化为拨号链接 -->
+	<meta name="format-detection" content="telephone=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title></title>
-	<link rel="stylesheet" href="">
+	<title>手机端计算器</title>
+	<link rel="stylesheet" href="lib/swiper/css/swiper.min.css">
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-	
+	<!-- 初始引导start -->
+	<div class="swiper-container">
+		<div class="swiper-wrapper">
+			<div class="swiper-slide">天</div>
+			<div class="swiper-slide">地</div>
+			<div class="swiper-slide">玄</div>
+			<div class="swiper-slide">黄</div>
+		</div>
+		<div class="swiper-pagination"></div>
+	</div>
+	<!-- 初始引导end -->
+	<script src="lib/swiper/js/swiper.min.js"></script>
+	<script src="js/index.js"></script>
 </body>
 </html>

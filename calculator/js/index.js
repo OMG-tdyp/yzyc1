@@ -9,7 +9,22 @@
 		$(".main-content").show("slow");
 	});
 
+	var num1 = 0;
+	const tmpbtn = $(".result span");
+	// document.addEventListener("touchmove", function(event) {
+	// 	event.preventDefault();
+	// },false);
+	// const btnnumber = $(".number");
+	// $.each(btnnumber,function(k,v) {
+	// 	btnnumber.eq(k).swipe(function() {
+	// 		alert($(this).html())
+	// 	})
+	// })
+
 	$(".number").on("click",function() {
-		$(this).css({"background":"#B2B2B2"});
-	});
+		$(this).addClass('current').siblings().removeClass('current');
+		const num = $(this).html();
+		num1 = parseInt((0 + num1) * 10) + num;
+		tmpbtn.html(num1);
+	})
 }());

@@ -87,6 +87,10 @@
 	align-items: center;
 }
 
+.button-group span.current {
+	background: #C9C9C9;
+}
+
 .button-group span.two-width {
 	width: 50%;
 }

@@ -91,13 +91,17 @@
 	background: #C9C9C9;
 }
 
+.button-group span.active {
+	border: 2.5px solid #000000;
+}
+
 .button-group span.two-width {
 	width: 50%;
 }
 
 .button-group span.operator {
 	color: #ffffff;
-	background: #FBA703;
+	background: #ff8600;
 }
 
 .button-group span.ground {

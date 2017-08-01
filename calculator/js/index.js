@@ -61,25 +61,25 @@
 	});
 
 	//加法
-	function addition(a,b) {
+	var addition = (a,b) => {
 		a = a || 0;
 		b = b || 0;
 		return a + b;
 	}
 	//减法
-	function subtraction(a,b) {
+	var subtraction = (a,b) => {
 		a = a || 0;
 		b = b || 0;
 		return a - b;
 	}
 	//乘法
-	function multiplication(a,b) {
+	var multiplication = (a,b) => {
 		a = a || 0;
 		b = b || 1;
 		return a * b;
 	}
 	//除法
-	function division(a,b) {
+	var division = (a,b) => {
 		a = a || 0;
 		b = b || 1;
 		return a / b;

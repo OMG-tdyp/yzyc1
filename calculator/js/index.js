@@ -14,6 +14,7 @@
 	var tmp1;
 	var tmp2;
 	var tmpop = "＝";
+	var orint = 0;//0：默认是整数 1：添加小数点
 	var cnt1 = 0;//记录负号点击次数
 	var status = 0;//0：还在一次计数中 1：重新开始计数
 	var start = 0;//0：没选取过数字 1：选取过数字
@@ -26,7 +27,7 @@
 
 	//本地存储，默认显示
 	function initNum(flag) {
-		(flag === 0) ? tmpbtn.html(defaultNum) : tmpbtn.html(parseInt(defaultNum));
+		(flag === 0) ? tmpbtn.html(defaultNum) : tmpbtn.html(parseFloat(defaultNum));
 	}
 	//关闭刷新页面时保存当前值
 	window.onbeforeunload = (e) => {
@@ -45,7 +46,9 @@
 	var count1 = (selector) => {
 		selector.addClass('current').siblings().removeClass('current');
 		const num = selector.html();
-		(cnt1 % 2 === 0) ? num1 = num1 * 10 + parseInt(num) : num1 = num1 * 10 - parseInt(num);
+		(cnt1 % 2 === 0) ? 
+			((orint === 0) ? num1 = num1 * 10 + parseFloat(num) : num1 = String(num1) + num) : 
+			((orint === 0) ? num1 = num1 * 10 - parseFloat(num) : num1 = "-" + String(num1) + num);
 		tmpbtn.html(num1);
 	}
 
@@ -53,7 +56,7 @@
 	var count2 = (selector) => {
 		selector.addClass('current').siblings().removeClass('current');
 		const num = selector.html();
-		(cnt1 % 2 === 0) ? num2 = num2 * 10 + parseInt(num) : num2 = num2 * 10 - parseInt(num);
+		(cnt1 % 2 === 0) ? num2 = num2 * 10 + parseFloat(num) : num2 = num2 * 10 - parseFloat(num);
 		tmpbtn.html(num2);
 	}
 
@@ -73,6 +76,7 @@
 		start = 0;
 		status = 0;
 		cnt1 = 0;
+		orint = 0;
 		tmp1 = 0;
 		tmp2 = 0;
 		num1 = 0;
@@ -89,6 +93,13 @@
 		const tmpnum = tmpbtn.html();
 		(tmpnum === "错误") ? "" : 
 			(tmpnum.slice(0,1) === "-") ? tmpbtn.html(tmpnum.slice(1)) : tmpbtn.html("-".concat(tmpnum));
+	});
+
+	//添加小数点
+	$(".point").on("click",function() {
+		orint ++;
+		var decimal = tmpbtn.html() + ".";
+		(orint === 1) ? (num1 = decimal, tmpbtn.html(decimal)) : "";
 	});
 
 	//加法
@@ -114,7 +125,7 @@
 	//等于
 	var equal = (a,b) => {
 		let n = tmpbtn.html();
-		(n === "错误") ? "" : n = parseInt(n);
+		(n === "错误") ? "" : n = parseFloat(n);
 		return n;
 	}
 
@@ -122,6 +133,7 @@
 	opbtn.on("click",function() {
 		tmp1 = num1;
 		cnt1 = 0;
+		orint = 0;
 		switch(tmpop) {
 			case "＋":
 				num1 = addition(tmp1,num2);

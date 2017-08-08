@@ -14,6 +14,7 @@
 	var tmp1;
 	var tmp2;
 	var tmpop = "＝";
+	var clearnum = 0;//清零按钮点击次数
 	var orint = 0;//0：默认是整数 1：添加小数点
 	var cnt1 = 0;//记录负号点击次数
 	var status = 0;//0：还在一次计数中 1：重新开始计数
@@ -48,7 +49,9 @@
 		const num = selector.html();
 		(cnt1 % 2 === 0) ? 
 			((orint === 0) ? num1 = num1 * 10 + parseFloat(num) : num1 = String(num1) + num) : 
-			((orint === 0) ? num1 = num1 * 10 - parseFloat(num) : num1 = "-" + String(num1) + num);
+			((orint === 0) ? 
+				((num1 > 0) ? num1 = -1 * num1 * 10 - parseFloat(num) : num1 = num1 * 10 - parseFloat(num)) : 
+					((String(num1).slice(0,1) === "-") ? num1 = String(num1) + num : num1 = "-" + String(num1) + num));
 		tmpbtn.html(num1);
 	}
 
@@ -73,6 +76,7 @@
 	//清零
 	$(".clear").on("click",function() {
 		localStorage.setItem("default",0);
+		clearnum ++;
 		start = 0;
 		status = 0;
 		cnt1 = 0;
@@ -81,7 +85,7 @@
 		tmp2 = 0;
 		num1 = 0;
 		num2 = 0;
-		tmpbtn.html(tmp1);
+		tmpbtn.html(0);
 		numbtn.removeClass('current');
 		opbtn.removeClass('active');
 	});
@@ -89,7 +93,7 @@
 	//添加正负号
 	$(".orplus").on("click",function() {
 		cnt1 ++;
-		(num2 === 0 && cnt1 === 1) ? tmpbtn.html(0) : "";
+		((clearnum === 0 && num2 === 0 && cnt1 === 1) || (clearnum > 0 && tmpbtn.html() === "0" && cnt1 === 1)) ? tmpbtn.html(0) : "";
 		const tmpnum = tmpbtn.html();
 		(tmpnum === "错误") ? "" : 
 			(tmpnum.slice(0,1) === "-") ? tmpbtn.html(tmpnum.slice(1)) : tmpbtn.html("-".concat(tmpnum));
@@ -112,7 +116,6 @@
 	}
 	//乘法
 	var multiplication = (a,b) => {
-		b = b || 1;
 		return (a === "错误" || b === "错误") ? "错误" : a * b;
 	}
 	//除法

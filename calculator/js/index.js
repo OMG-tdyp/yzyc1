@@ -59,7 +59,12 @@
 	var count2 = (selector) => {
 		selector.addClass('current').siblings().removeClass('current');
 		const num = selector.html();
-		(cnt1 % 2 === 0) ? num2 = num2 * 10 + parseFloat(num) : num2 = num2 * 10 - parseFloat(num);
+		(cnt1 % 2 === 0) ? 
+			((orint === 0) ? num2 = num2 * 10 + parseFloat(num) : num2 = String(num2) + num) : 
+			((orint === 0) ? 
+				((num2 > 0) ? num2 = -1 * num2 * 10 - parseFloat(num) : num2 = num2 * 10 - parseFloat(num)) : 
+					((String(num2).slice(0,1) === "-") ? num2 = String(num2) + num : num2 = "-" + String(num2) + num));
+		//(cnt1 % 2 === 0) ? num2 = num2 * 10 + parseFloat(num) : num2 = num2 * 10 - parseFloat(num);
 		tmpbtn.html(num2);
 	}
 
@@ -93,53 +98,61 @@
 	//添加正负号
 	$(".orplus").on("click",function() {
 		cnt1 ++;
-		((clearnum === 0 && num2 === 0 && cnt1 === 1) || (clearnum > 0 && tmpbtn.html() === "0" && cnt1 === 1)) ? tmpbtn.html(0) : "";
+		//((clearnum === 0 && num2 === 0 && cnt1 === 1) || (clearnum > 0 && tmpbtn.html() === "0" && cnt1 === 1)) ? tmpbtn.html(0) : "";
+		(status === 1 && num2 === 0) ? tmpbtn.html(0) : "";
 		const tmpnum = tmpbtn.html();
 		(tmpnum === "错误") ? "" : 
-			(tmpnum.slice(0,1) === "-") ? tmpbtn.html(tmpnum.slice(1)) : tmpbtn.html("-".concat(tmpnum));
+			(tmpnum.slice(0,1) === "-") ? 
+				(status === 1) ? (num2 = tmpnum.slice(1), tmpbtn.html(tmpnum.slice(1))) : (num1 = tmpnum.slice(1), tmpbtn.html(tmpnum.slice(1))) : 
+				(status === 1) ? (num2 = "-".concat(tmpnum), tmpbtn.html("-".concat(tmpnum))) : (num1 = "-".concat(tmpnum), tmpbtn.html("-".concat(tmpnum)));
 	});
 
-	//添加小数点
+	//添加小数点 
 	$(".point").on("click",function() {
 		orint ++;
+		(status === 1 && num2 === 0) ? tmpbtn.html(0) : "";
 		var decimal = tmpbtn.html() + ".";
-		(orint === 1) ? (num1 = decimal, tmpbtn.html(decimal)) : "";
+		(orint === 1) ? 
+			(status === 1) ? (num2 = decimal,tmpbtn.html(decimal)) : (num1 = decimal, tmpbtn.html(decimal)) :
+			"";
 	});
 
 	//加法
 	var addition = (a,b) => {
-		return (a === "错误" || b === "错误") ? "错误" : a + b;
+		return (a === "错误" || b === "错误") ? "错误" : parseFloat(a) + parseFloat(b);
 	}
 	//减法
 	var subtraction = (a,b) => {
-		return (a === "错误" || b === "错误") ? "错误" : a - b;
+		return (a === "错误" || b === "错误") ? "错误" : parseFloat(a) - parseFloat(b);
 	}
 	//乘法
 	var multiplication = (a,b) => {
-		return (a === "错误" || b === "错误") ? "错误" : a * b;
+		return (a === "错误" || b === "错误") ? "错误" : parseFloat(a) * parseFloat(b);
 	}
 	//除法
 	var division = (a,b) => {
 		let n;
-		(b === 0) ? n = "错误" : 
-			(start === 0) ? n = 0 : (b = b || 1,(a === "错误" || b === "错误") ? n = "错误" : n = a / b);
+		(parseFloat(b) === 0) ? n = "错误" : 
+			(start === 0) ? n = 0 : (b = b || 1,(a === "错误" || b === "错误") ? n = "错误" : n = parseFloat(a) / parseFloat(b));
 		return n;		
 	}
 	//等于
 	var equal = (a,b) => {
-		let n = tmpbtn.html();
-		(n === "错误") ? "" : n = parseFloat(n);
+		return tmpbtn.html();
+		//(n === "错误") ? "" : n = parseFloat(n);
 		return n;
 	}
 
 	//点击运算符
 	opbtn.on("click",function() {
+		console.log(num1)
 		tmp1 = num1;
 		cnt1 = 0;
 		orint = 0;
 		switch(tmpop) {
 			case "＋":
 				num1 = addition(tmp1,num2);
+
 				break;
 			case "－":
 				num1 = subtraction(tmp1,num2);
@@ -154,6 +167,7 @@
 				num1 = equal(tmp1,num2);
 				break;
 		}	
+		console.log(num1)
 		tmpbtn.html(num1);	
 		num2 = 0;
 		numbtn.removeClass('current');
@@ -162,4 +176,9 @@
 		tmpop = type; 
 		status = 1;		
 	});
+
+	//浮点数精度问题，四舍五入，最多保留2位小数
+	var holdDecimal = (number) => {
+		//String(number)
+	}
 }());

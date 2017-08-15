@@ -4,9 +4,13 @@
 		pagination: '.swiper-pagination'
 	});
 
+	var firstLogin = localStorage.getItem("first");
+	(Number(firstLogin) === 1) ? ($(".swiper-container").remove(),$(".main-content").show("slow")) : "";
+
 	$(".enter").on("click",function() {
 		$(".swiper-container").remove();
 		$(".main-content").show("slow");
+		localStorage.setItem("first",1);
 	});
 
 	var num1 = 0;
@@ -28,7 +32,7 @@
 
 	//本地存储，默认显示
 	function initNum(flag) {
-		(flag === 0) ? tmpbtn.html(defaultNum) : tmpbtn.html(parseFloat(defaultNum));
+		(flag === 0) ? tmpbtn.html(defaultNum) : tmpbtn.html(defaultNum);
 	}
 	//关闭刷新页面时保存当前值
 	window.onbeforeunload = (e) => {
@@ -117,6 +121,21 @@
 			"";
 	});
 
+	//点击百分号向前移动两位小数点
+	$(".percent").on("click",function() {
+		(status === 1 && num2 === 0) ? tmpbtn.html(0) : "";
+		(status === 1) ? num2 = percentHandle() : num1 = percentHandle();		
+	});
+
+	//点击百分号处理函数
+	var percentHandle = () => {
+		const tmpnum = tmpbtn.html();
+		var pernum;
+		(tmpnum === "错误" || tmpnum === "0") ? pernum = tmpnum : (pernum = numberFormat(Number(tmpnum) / 100), tmpbtn.html(pernum));
+		(String(pernum).indexOf(".") >= 0) ? (pernum = Number(pernum), orint ++) : "";
+		return pernum;
+	}
+
 	//加法
 	var addition = (a,b) => {
 		return (a === "错误" || b === "错误") ? "错误" : parseFloat(a) + parseFloat(b);
@@ -145,29 +164,26 @@
 
 	//点击运算符
 	opbtn.on("click",function() {
-		console.log(num1)
 		tmp1 = num1;
 		cnt1 = 0;
 		orint = 0;
 		switch(tmpop) {
 			case "＋":
-				num1 = addition(tmp1,num2);
-
+				num1 = numberFormat(addition(tmp1,num2));
 				break;
 			case "－":
-				num1 = subtraction(tmp1,num2);
+				num1 = numberFormat(subtraction(tmp1,num2));
 				break;
 			case "×":
-				num1 = multiplication(tmp1,num2);
+				num1 = numberFormat(multiplication(tmp1,num2));
 				break;
 			case "÷":
-				num1 = division(tmp1,num2);
+				num1 = numberFormat(division(tmp1,num2));
 				break;
 			case "＝":
 				num1 = equal(tmp1,num2);
 				break;
-		}	
-		console.log(num1)
+		}
 		tmpbtn.html(num1);	
 		num2 = 0;
 		numbtn.removeClass('current');
@@ -177,8 +193,26 @@
 		status = 1;		
 	});
 
-	//浮点数精度问题，四舍五入，最多保留2位小数
-	var holdDecimal = (number) => {
-		//String(number)
+	//格式化数字输出
+	var numberFormat = (number) => {
+		var integer = String(number).split(".")[0];
+		var decimal = String(number).split(".")[1];
+		var fnumber = 0;
+		(integer.length > 10) ? (fnumber = 1, number = Number(number).toExponential(5)) : 
+			(decimal && decimal.length > 5) ? number = Number(number).toFixed(5) : "";
+		if(fnumber === 0) {
+			var snumber = String(number);
+			while(String(number).indexOf(".") >= 0) {			
+				var nlength = snumber.length;
+				if(snumber.slice(nlength - 1) === "0") {
+					snumber = snumber.substring(0,nlength - 1);
+				} else {
+					break;
+				}
+			}
+			number = Number(snumber);
+		}		
+		return number;
 	}
+
 }());
